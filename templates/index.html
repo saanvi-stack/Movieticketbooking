@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Movie Ticket Booking</title>
+    <style>
+        /* Resetting default browser styles */
+        body, h1, h2, h3, p, ul, li, form, input, button {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* Setting up basic styles */
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            background-color: #f4f4f4;
+        }
+
+        header {
+            background-color: #333;
+            color: #fff;
+            padding: 20px;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 2em;
+        }
+
+        main {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 0 20px;
+        }
+
+        section {
+            margin-bottom: 20px;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        h2 {
+            font-size: 1.5em;
+            margin-bottom: 10px;
+        }
+
+        form {
+            margin-bottom: 10px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        input[type="text"],
+        input[type="number"],
+        button {
+            padding: 10px;
+            margin-bottom: 10px;
+            width: 100%;
+        }
+
+        button {
+            background-color: #333;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #555;
+        }
+
+        ul {
+            list-style-type: none;
+        }
+
+        li {
+            border-bottom: 1px solid #ccc;
+            padding: 10px 0;
+        }
+
+        footer {
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+            padding: 10px;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+        }
+        .button {
+            background-color: #333;
+            color: #fff;
+            text-decoration: none;
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+            
+            margin-right: 10px;
+        }
+
+        .button:hover {
+            background-color: #555;
+        }
+        
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Movie Ticket Booking</h1>
+    </header>
+
+    <main>
+        <section class="booking">
+        <h2>Book Your Tickets Now!</h2>
+        {% if 'user' in session %}
+            <p><b>Welcome, {{ session['user'] }}!</b></p><br>
+            <a href="/dashboard" class="button">Go to Dashboard</a>
+            <a href="/logout" class="button">Logout</a>
+            
+            <a href="/assigned" class="button">Assignment</a> <!-- Add the Assignment button -->
+        {% else %}
+            <p>Already a registered user? Sign in to book your tickets.</p><br>
+            <a href="/login" class="button">Sign In</a>
+            <a href="/register" class="button">Register</a>
+        {% endif %}
+    </section>
+        
+        
+        <section class="search">
+            <h2>Search for Movies</h2>
+            <form action="/search_movies" method="get">
+                <label for="search_query">Enter keywords:</label>
+                <input type="text" id="search_query" name="search_query" placeholder="Enter keywords...">
+                <button type="submit">Search</button>
+            </form>
+        </section>
+
+        {% if search_results %}
+        <section class="search-results">
+            <h2>Search Results for "{{ search_query }}"</h2>
+            <ul>
+                {% for result in search_results %}
+                    <li>
+                        <!-- Display search result information -->
+                        <p>{{ result[1] }}</p> <!-- Movie Name -->
+                        <p>Rating: {{ result[2] }}</p> <!-- Movie Rating -->
+                        <p>Show ID: {{ result[3] }}</p> <!-- Movie Rating -->
+                        <p>Show Time: {{ result[5] }}</p> <!-- Show Time -->
+                        <p>Theater: {{ result[4] }}</p> <!-- Theater Name -->
+                        <form action="/book_tickets" method="post">
+                            <input type="hidden" name="show_id" value="{{ result[3] }}"> <!-- Show ID -->
+                            <label for="num_tickets">Number of Tickets:</label>
+                            <input type="number" id="num_tickets" name="num_tickets" min="1" value="1">
+                            <input type="submit" value="Book Tickets" class="button">
+                        </form>
+                    </li>
+                {% endfor %}
+            </ul>
+        </section>
+        {% endif %}
+        
+        <section class="movies">
+            <h2>Latest Movies</h2>
+            <ul>
+                {% for movie in movies %}
+                    <li>
+                        <h3>{{ movie[1] }}</h3> <!-- Movie Name -->
+                        <p>Rating: {{ movie[2] }}</p> <!-- Movie Rating -->
+                        <p>Show ID: {{ movie[3] }}</p> <!-- Movie Rating -->
+                        <p>Show Time: {{ movie[5] }}</p> <!-- Show Time -->
+                        <p>Theater: {{ movie[4] }}</p> <!-- Theater Name -->
+                        <form action="/book_tickets" method="post">
+                            <input type="hidden" name="show_id" value="{{ movie[3] }}"> <!-- Show ID -->
+                            <label for="num_tickets">Number of Tickets:</label>
+                            <input type="number" id="num_tickets" name="num_tickets" min="1" value="1">
+                            <input type="submit" value="Book Tickets" class="button">
+                        </form>
+                    </li>
+                {% endfor %}
+            </ul>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 Movie Ticket Booking System</p>
+    </footer>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>

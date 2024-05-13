@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Assigned Movies</title>
+    <style>
+        /* Resetting default browser styles */
+        body, h1, h2, h3, p, ul, li, form, input, button {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* Setting up basic styles */
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            background-color: #f4f4f4;
+        }
+
+        header {
+            background-color: #333;
+            color: #fff;
+            padding: 20px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            font-size: 2em;
+            margin-bottom: 10px;
+        }
+
+        main {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        section {
+            margin-bottom: 20px;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        h2 {
+            font-size: 1.5em;
+            margin-bottom: 10px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+
+        th, td {
+            padding: 8px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        footer {
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+            padding: 10px;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+        }
+
+        button {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        button:focus {
+            outline: none;
+        }
+
+        header nav a {
+            color: white;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <ul>
+                <h1><a href="/">Movie Ticket Booking - Assignment</a></h1>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section>
+            <h1>Group By Movies</h1>
+            <div id="groupByMoviesSection" style="display:none;">
+                <!-- Group By Movies Table -->
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Movie</th>
+                            <th>Total Reviews</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for movie_data in group_by_movies_result %}
+                            {% for movie in movie_data %}
+                                <tr>
+                                    <td>{{ movie[0] }}</td>
+                                    <td>{{ movie[1] }}</td>
+                                </tr>
+                            {% endfor %}
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <button id="groupByMoviesBtn">Show Group By Movies</button>
+        </section>
+
+        <section>
+            <h1>Correlated Subquery</h1>
+            <div id="correlatedSubquerySection" style="display:none;">
+                <!-- Correlated Subquery Table -->
+                <table>
+                    <thead>
+                        <tr>
+                            <th>TheaterName</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for theater_data in correlated_subquery_result %}
+                            {% for theater in theater_data %}
+                                <tr>
+                                    <td>{{ theater[0] }}</td>
+                                </tr>
+                            {% endfor %}
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <button id="correlatedSubqueryBtn">Show Correlated Subquery</button>
+        </section>
+
+        <section>
+            <h1>Inner Join Shows</h1>
+            <div id="innerJoinShowsSection" style="display:none;">
+                <!-- Inner Join Shows Table -->
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Movie</th>
+                            <th>Theater</th>
+                            <th>Show Time</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for row in inner_join_shows_result %}
+                            {% for show in row %}
+                                <tr>
+                                    <td>{{ show[0] }}</td>
+                                    <td>{{ show[1] }}</td>
+                                    <td>{{ show[2] }}</td>
+                                </tr>
+                            {% endfor %}
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <button id="innerJoinShowsBtn">Show Inner Join Shows</button>
+        </section>
+
+        <section>
+            <h1>View Next Immediate Shows</h1>
+            <div id="viewNextImmediateShowsSection" style="display:none;">
+                <!-- View Next Immediate Shows Table -->
+                <table>
+                    <thead>
+                        <!-- Add table headers if needed -->
+                    </thead>
+                    <tbody>
+                        {% for row in view_next_immediate_shows_result %}
+                            <tr>
+                                {% for col in row %}
+                                    <td>{{ col }}</td>
+                                {% endfor %}
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <button id="viewNextImmediateShowsBtn">Show View Next Immediate Shows</button>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 Movie Ticket Booking System</p>
+    </footer>
+
+    <script>
+        document.getElementById("groupByMoviesBtn").addEventListener("click", function() {
+            toggleDisplay("groupByMoviesSection");
+        });
+
+        document.getElementById("correlatedSubqueryBtn").addEventListener("click", function() {
+            toggleDisplay("correlatedSubquerySection");
+        });
+
+        document.getElementById("innerJoinShowsBtn").addEventListener("click", function() {
+            toggleDisplay("innerJoinShowsSection");
+        });
+
+        document.getElementById("viewNextImmediateShowsBtn").addEventListener("click", function() {
+            toggleDisplay("viewNextImmediateShowsSection");
+        });
+
+        function toggleDisplay(sectionId) {
+            var section = document.getElementById(sectionId);
+            if (section.style.display === "none") {
+                section.style.display = "block";
+            } else {
+                section.style.display = "none";
+            }
+        }
+    </script>
+</body>
+</html>
